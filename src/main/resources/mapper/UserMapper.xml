@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.managementsystem.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.project.managementsystem.pojo.User">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userName" column="user_name" />
+            <result property="password" column="password" />
+            <result property="status" column="statu" />
+            <result property="roleId" column="role_id" />
+    </resultMap>
+
+    <select id="listAll" resultType="com.project.managementsystem.pojo.User">
+        select
+            id,
+            user_name,
+            password,
+            statu,
+            role_id
+        from user
+    </select>
+
+
+</mapper>

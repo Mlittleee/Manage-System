@@ -1,15 +1,15 @@
 package com.project.managementsystem.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.project.managementsystem.entity.User;
+import com.project.managementsystem.pojo.User;
 
-/************************
- * ManageSystem
- * com.project.managesystem.service
- * MHC
- * author : mhc
- * date:  2023/6/11 13:05
- * description : 
- ************************/
+import java.util.List;
+
+/**
+* @author MHC
+* @description 针对表【user】的数据库操作Service
+* @createDate 2023-06-11 14:47:39
+*/
 public interface UserService extends IService<User> {
+    List<User> listAll();
 }
