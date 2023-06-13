@@ -1,13 +1,27 @@
 package com.project.managementsystem.universal;
 
+import com.project.managementsystem.dto.UserDto;
+
 /************************
  * ManageSystem
  * com.project.managesystem.universal
  * MHC
  * author : mhc
  * date:  2023/6/11 12:02
- * description : 
+ * description : 线程安全的用户信息保存类
  ************************/
 public class UserHolder {
+    private static final ThreadLocal<UserDto> tl = new ThreadLocal<>();
 
+    // 保存用户信息
+    public static void saveUser(UserDto user){
+        tl.set(user);
+    }
+    // 获取用户信息
+    public static UserDto getUser(){
+        return tl.get();
+    }
+    // 删除用户信息
+    public static void removeUser(){ tl.remove();
+    }
 }
