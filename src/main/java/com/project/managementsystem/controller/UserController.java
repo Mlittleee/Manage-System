@@ -36,10 +36,10 @@ public class UserController {
     private UserMapper userMapper;
 
     //用户新增
-    @PostMapping("/add")
+    @PostMapping("/save")
     public Result<User> addUser(@RequestBody User user){
-        Boolean isAdd = userService.save(user);
-        if (isAdd){
+        Boolean isSave = userService.save(user);
+        if (isSave){
             return Result.success(user);
         }else {
             return Result.error("新增用户失败");
@@ -72,7 +72,8 @@ public class UserController {
     @GetMapping("/delete")
     public Result<String> deleteUser(Integer id){
         boolean isDelete = userService.removeById(id);
-        if (!isDelete){
+        System.out.println(isDelete);
+        if (isDelete){
             //返回json数据
             return Result.success("删除用户成功");
         }else {
@@ -81,16 +82,16 @@ public class UserController {
     }
 
     //用户查询(模糊查询)
-    @GetMapping("/query")
-    public Result<List<User>> queryUser(String UserName){
+    @PostMapping("/query")
+    public Result<List<User>> queryUser(@RequestBody String UserName){
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(User::getUserName,UserName);
         List<User> UserList= userService.list(wrapper);
-        if (UserList.size()>0){
+        //if (UserList.size()>0){
             return Result.success(UserList);
-        }else {
+        /*}else {
             return Result.error("没有查询到用户");
-        }
+        }*/
     }
 
     //列出所有用户
@@ -116,14 +117,16 @@ public class UserController {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         if (param != null) {
             String userName = (String) param.get("userName");
-            if (StrUtil.isNotBlank(userName)) {
+            if (StrUtil.isNotBlank(userName) && !userName.equals("null")) {
                 wrapper.like(User::getUserName, userName);
             }
         }
         IPage result = userService.page(useInfoPage, wrapper);
+        //获取总记录条数total
+        long total = result.getTotal();
         //如果非空，则返回
         if (result.getRecords().size() > 0) {
-            return Result.success(result.getRecords());
+            return Result.success(result.getRecords(), total);
         } else {
             return Result.error("没有查询到用户");
         }

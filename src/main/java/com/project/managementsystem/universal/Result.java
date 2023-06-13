@@ -19,70 +19,43 @@ public class Result<T> {
 
     private String msg; //信息
 
+    private long total; //总记录数
+
     private T data; //数据
 
     private Map<String, Object> map = new HashMap<>(); //动态数据
 
-    public static <T> Result<T> success(T object) {
-        Result<T> r = new Result<T>();
-        r.data = object;
+    //无参数传递
+    public static <T> Result<T> success() {
+        Result<T> r = new Result<>();
         r.code = 200;
+        r.total = 0L;
         return r;
     }
 
-    //接受对象的list
+    //只有对象数据的时候
+    public static <T> Result<T> success(T object) {
+        Result<T> r = new Result<>();
+        r.data = object;
+        r.code = 200;
+        r.total = 0L;
+        return r;
+    }
 
+    //加上total数
+    public static <T> Result<T> success(T object, long total) {
+        Result<T> r = new Result<>();
+        r.data = object;
+        r.code = 200;
+        r.total = total;
+        return r;
+    }
 
     public static <T> Result<T> error(String msg) {
         Result<T> r = new Result<>();
         r.msg = msg;
         r.code = 0;
-        return r;
-    }
-
-
-    public static <T> Result<T> success(String msg, Integer code, T data) {
-        Result<T> r = new Result<>();
-        r.msg = msg;
-        r.code = code;
-        r.data = data;
-        return r;
-    }
-
-    public static <T> Result<T> success(String msg, Integer code) {
-        Result<T> r = new Result<>();
-        r.msg = msg;
-        r.code = code;
-        return r;
-    }
-
-    public static <T> Result<T> success() {
-        Result<T> r = new Result<>();
-        r.msg = "success";
-        r.code = 200;
-        return r;
-    }
-
-    public static <T> Result<T> error() {
-        Result<T> r = new Result<>();
-        r.msg = "error";
-        r.code = 0;
-        return r;
-    }
-
-    public static <T> Result<T> error(T data) {
-        Result<T> r = new Result<>();
-        r.msg = "error";
-        r.code = 0;
-        r.data = data;
-        return r;
-    }
-
-    public static <T> Result<T> error(String msg, T data) {
-        Result<T> r = new Result<>();
-        r.msg = msg;
-        r.code = 0;
-        r.data = data;
+        r.total = 0L;
         return r;
     }
 
@@ -90,4 +63,5 @@ public class Result<T> {
         this.map.put(key, value);
         return this;
     }
+
 }
