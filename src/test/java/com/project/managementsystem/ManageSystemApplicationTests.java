@@ -1,7 +1,7 @@
 package com.project.managementsystem;
 
 import com.project.managementsystem.pojo.User;
-import com.project.managementsystem.service.UserService;
+import com.project.managementsystem.service.IUserService;
 import com.project.managementsystem.universal.QueryPageParam;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.List;
 class ManageSystemApplicationTests {
 
     @Autowired
-    private UserService userService;
+    private IUserService IUserService;
 
     @Test
     void contextLoads() {
@@ -22,13 +22,13 @@ class ManageSystemApplicationTests {
     //单个查询，mybatis-plus中有的方法
     @Test
     void UserServiceTest(){
-        System.out.println(userService.getById(1));
+        System.out.println(IUserService.getById(1));
     }
 
     //自写方法
     @Test
     void UserServiceTest2(){
-        List<User> list = userService.listAll();
+        List<User> list = IUserService.listAll();
         for (User user : list) {
             System.out.println(user);
         }

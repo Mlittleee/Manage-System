@@ -7,14 +7,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.project.managementsystem.mapper.UserMapper;
 import com.project.managementsystem.pojo.User;
-import com.project.managementsystem.service.UserService;
+import com.project.managementsystem.service.IUserService;
+import com.project.managementsystem.service.impl.UserServiceImpl;
 import com.project.managementsystem.universal.QueryPageParam;
 import com.project.managementsystem.universal.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /************************
  * Manage-System
@@ -30,15 +35,31 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private IUserService IuserService;
+
+    @Autowired
+    private UserServiceImpl userServiceimpl;
 
     @Autowired
     private UserMapper userMapper;
 
+    //用户登录(自动注册)
+    @PostMapping("/login")
+    public Result<User> login(@RequestBody Map<String, String> map, HttpSession session, ServletRequest servletRequest){
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String token = request.getHeader("Authorization");
+        User user = userServiceimpl.login(map, session);
+        if (user!=null){
+            return Result.success(user);
+        }else{
+            return Result.error("登录失败");
+        }
+    }
+
     //用户新增
     @PostMapping("/save")
     public Result<User> addUser(@RequestBody User user){
-        Boolean isSave = userService.save(user);
+        Boolean isSave = IuserService.save(user);
         if (isSave){
             return Result.success(user);
         }else {
@@ -49,7 +70,7 @@ public class UserController {
     //用户修改
    @PostMapping("/update")
     public Result<User> updateUser(@RequestBody User user){
-        boolean isUpdate = userService.updateById(user);
+        boolean isUpdate = IuserService.updateById(user);
         if (isUpdate){
             return Result.success(user);
         }else {
@@ -60,7 +81,7 @@ public class UserController {
     //用户新增或者修改
     @PostMapping("/addOrUpdate")
     public Result<User> addUserOrUpdateUser(@RequestBody User user){
-        boolean isAddOrUpdate = userService.saveOrUpdate(user);
+        boolean isAddOrUpdate = IuserService.saveOrUpdate(user);
         if (isAddOrUpdate){
             return Result.success(user);
         }else {
@@ -71,7 +92,7 @@ public class UserController {
     //用户删除
     @GetMapping("/delete")
     public Result<String> deleteUser(Integer id){
-        boolean isDelete = userService.removeById(id);
+        boolean isDelete = IuserService.removeById(id);
         System.out.println(isDelete);
         if (isDelete){
             //返回json数据
@@ -86,7 +107,7 @@ public class UserController {
     public Result<List<User>> queryUser(@RequestBody String UserName){
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(User::getUserName,UserName);
-        List<User> UserList= userService.list(wrapper);
+        List<User> UserList= IuserService.list(wrapper);
         //if (UserList.size()>0){
             return Result.success(UserList);
         /*}else {
@@ -97,7 +118,7 @@ public class UserController {
     //列出所有用户
     @GetMapping("/listAll")
     public Result<List<User>> listAll(){
-        List<User> UserList = userService.list();
+        List<User> UserList = IuserService.list();
         if (UserList.size()>0){
             return Result.success(UserList);
         }else {
@@ -121,7 +142,7 @@ public class UserController {
                 wrapper.like(User::getUserName, userName);
             }
         }
-        IPage result = userService.page(useInfoPage, wrapper);
+        IPage result = IuserService.page(useInfoPage, wrapper);
         //获取总记录条数total
         long total = result.getTotal();
         //如果非空，则返回
