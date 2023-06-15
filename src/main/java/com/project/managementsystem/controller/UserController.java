@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.project.managementsystem.dto.UserDto;
 import com.project.managementsystem.mapper.UserMapper;
 import com.project.managementsystem.pojo.User;
 import com.project.managementsystem.service.IUserService;
@@ -45,12 +46,11 @@ public class UserController {
 
     //用户登录(自动注册)
     @PostMapping("/login")
-    public Result<User> login(@RequestBody Map<String, String> map, HttpSession session, ServletRequest servletRequest){
+    public Result<UserDto> login(@RequestBody Map<String, String> map, HttpSession session, ServletRequest servletRequest){
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String token = request.getHeader("Authorization");
-        User user = userServiceimpl.login(map, session);
-        if (user!=null){
-            return Result.success(user);
+        UserDto userDto = userServiceimpl.login(map, session);
+        if (userDto!=null){
+            return Result.success(userDto);
         }else{
             return Result.error("登录失败");
         }

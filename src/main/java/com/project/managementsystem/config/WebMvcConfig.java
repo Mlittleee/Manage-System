@@ -62,7 +62,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).excludePathPatterns("/user/login","/index.html","/js/**","/css/**","/img/**"
+        registry.addInterceptor(new LoginInterceptor()).excludePathPatterns("/user/login","/Index","/js/**","/css/**","/img/**"
                 ,"/webjars/**"
                 ,"/v2/**").order(1);
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate)).addPathPatterns("/**").order(0);

@@ -39,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
     //将 HTTP 请求体中的 JSON 或 XML 格式的数据绑定到一个 Map<String, String> 类型的变量
-    public User login(@RequestBody Map<String,String> map, HttpSession session){
+    public UserDto login(@RequestBody Map<String,String> map, HttpSession session){
         String userName = map.get("userName");
         String password = map.get("password");
         //查看该用户是否为新用户
